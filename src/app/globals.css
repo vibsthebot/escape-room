@@ -29,6 +29,13 @@
        url('https://fonts.gstatic.com/s/wingdings/v12/JnnJQnSITGFkD-Q0qCgwwbl4.woff') format('woff');
 }
 
-.my-text {
-  font-family: 'Wingdings';
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
