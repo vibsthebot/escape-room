@@ -1,21 +1,32 @@
-import Image from 'next/image'
 import Link from 'next/link';
+import { useState } from 'react';
 
 interface buttonProps {
     showGreenImage: boolean;
+    link: string,
   }
 
+
+
 const ConditionalButton: React.FC<buttonProps> = ({
-    showGreenImage,
+    showGreenImage, link,
 }) => {
-    
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleSubmit = () => {
+        setSubmitted(true); // Update state to show submitted text
+    };
     if (showGreenImage){
         return (
-            <Link href={"/page2"}><button type="submit" className="px-5 py-2 bg-cyan-50 hover:bg-cyan-500 rounded-full">Submit</button></Link>
+            <Link href={link}><button className="px-5 py-2 bg-cyan-50 hover:bg-cyan-500 rounded-full">Submit</button></Link>
         )
     } else {
         return (
-            <button type="submit" className="px-5 py-2 bg-cyan-50 hover:bg-cyan-500 rounded-full">Submit</button>
+            <div>
+                {submitted && <p className='text-red-500'>Wrong Key</p>}
+                <button onClick={handleSubmit} className="px-5 py-2 bg-cyan-50 hover:bg-cyan-500 rounded-full">Submit</button>
+                
+            </div>
         ) 
     }
 };

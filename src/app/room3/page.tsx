@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import TypewriterEffect from "../ui/typewriter"
 import ConditionalImage from "../ui/lock"
 import ConditionalButton from "../ui/conditionalButton";
+import Image from 'next/image'
 
 export default function Page(){
     const [text, setText] = useState('');
@@ -18,14 +19,13 @@ export default function Page(){
 
     return (
         <main className="p-11 flex">
-            <div className="basis-1/3"></div>
+            <div className="basis-1/3">
+                <Image src={"/stickynotes.png"} width={300} height={300} alt="Sticknotes: 11111000000"/>
+            </div>
             <div className="basis-1/3">
                 <ul>
-                    <li className="pb-11">
-                        {<TypewriterEffect text={atbashEncrypt("Dear " + text+ ", This ship has had a major engine malfunction. You are caught within the gravity of Planet WASP-12b, and your ship will spiral and crash into it. Your only hope for survival is the hidden escape pod accessible in the hallway adjacent to the command module. In order to override  the ship’s emergency lockdown, you must input the code word “Supernova”. By the way: The quick brown fox jumps over the lazy dog")} />}
-                    </li>
                     <li>
-                        {<TypewriterEffect text={atbashEncrypt("Dear " + text+ ", This ship has had a major engine malfunction. You are caught within the gravity of Planet WASP-12b, and your ship will spiral and crash into it. Your only hope for survival is the hidden escape pod accessible in the hallway adjacent to the command module. In order to override  the ship’s emergency lockdown, you must input the code word “Supernova”. By the way: The quick brown fox jumps over the lazy dog")} font="Wingdings" />}
+                        {<TypewriterEffect text={ceaserEncript("23", "Dear " + text+ ", This ship has had a major engine malfunction. You are caught within the gravity of Planet WASP-12b, and your ship will spiral and crash into it. Your only hope for survival is the hidden escape pod accessible in the hallway adjacent to the command module. In order to override  the ship’s emergency lockdown, you must input the code word “Supernova”. By the way: The quick brown fox jumps over the lazy dog")} font="Wingdings" />}
                     </li>
                     <li className="fixed w-1/3 bottom-5">
                         <div className="self-start flex flex-col items-center justify-center">
@@ -52,27 +52,39 @@ export default function Page(){
 }
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-const backAlphabet = "ZYXWVUTSRQPONMLKJIHGFEDCBA"
 
-function atbashEncrypt(text: string): string{
-    text = text.toUpperCase()
-    const message = [];
-    for (let i = 0; i < text.length; i++){
-        if (alphabet.includes(text[i])){
-            message.push(backAlphabet[alphabet.indexOf(text[i])])
-            //console.log(message)
-        } else message.push(text[i])
-    }
-    return message.join("")
+function ceaserEncript(key: string, plaintext: string): string {
+    if (key == "undefined") key = "0";
+    plaintext = plaintext.toUpperCase()
+    let result: string = ""
+    for (let i = 0; i < plaintext.length; i++) {
+        const char = plaintext[i];
+        const charCode = char.charCodeAt(0)
+        if (alphabet.includes(char)){
+            const charIndex = alphabet.indexOf(char)
+            const newIndex = (charIndex + parseFloat(key)) % 26;
+            result += alphabet[newIndex];
+        }
+        else result+=plaintext[i]
+      }
+      return result;
+
 }
 
-function atbashDecrypt(text:string): string{
-    text = text.toUpperCase()
-    const message = [];
-    for (let i = 0; i < text.length; i++){
-        if (alphabet.includes(text[i])){
-            message.push(alphabet[backAlphabet.indexOf(text[i])])
-        } else message.push(text[i])
-    }
-    return message.join("")
+function ceaserDecript(key: string, plaintext: string): string {
+    if (key == "undefined") key = "0";
+    plaintext = plaintext.toUpperCase()
+    let result: string = ""
+    for (let i = 0; i < plaintext.length; i++) {
+        const char = plaintext[i];
+        const charCode = char.charCodeAt(0)
+        if (alphabet.includes(char)){
+            const charIndex = alphabet.indexOf(char)
+            const newIndex = (charIndex - parseFloat(key)) % 26;
+            result += alphabet[newIndex];
+        }
+        else result+=plaintext[i]
+      }
+      return result;
+
 }

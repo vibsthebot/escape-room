@@ -1,4 +1,4 @@
-const backAlphabet = "ZXWVUTSRQPONMLKJIHGFEDCBA"
+const backAlphabet = "ZYXWVUTSRQPONMLKJIHGFEDCBA"
 
 function atbashEncrypt(text: string): string{
     text = text.toUpperCase()
@@ -6,7 +6,7 @@ function atbashEncrypt(text: string): string{
     for (let i = 0; i < text.length; i++){
         if (alphabet.includes(text[i])){
             message.push(backAlphabet[alphabet.indexOf(text[i])])
-            console.log(message)
+            //console.log(message)
         } else message.push(text[i])
     }
     return message.join("")
