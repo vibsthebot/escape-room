@@ -22,7 +22,7 @@ export default function Page(){
             <div className="basis-1/3">
                 <ul>
                     <li>
-                    <TypewriterEffect text={encryptColumnarTransposition("message", "key")}/>
+                    <TypewriterEffect text={vigenereEncript("key", "message")}/>
                     </li>
                     <li className="fixed w-1/3 bottom-5">
                         <div className="self-start flex flex-col items-center justify-center">
@@ -37,7 +37,7 @@ export default function Page(){
                             />
                             <div className="pt-5"></div>
                             <div>
-                                <ConditionalButton showGreenImage={inputValueKey.toUpperCase()=="SUPERNOVA"} link={"/room5"}/>
+                                <ConditionalButton showGreenImage={inputValueKey.toUpperCase()=="SUPERNOVA"} link={"/finish"}/>
                             </div>
                         </div>
                     </li>
@@ -48,48 +48,48 @@ export default function Page(){
     )
 }
 
-function encryptColumnarTransposition(plaintext: string, key: string): string {
-    if (!plaintext || !key) {
-        return "hi"
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+function vigenereEncript(key: string, text: string): string {
+    text = text.toUpperCase()
+    key = key.toUpperCase()
+    let result: string = ""
+    let indexOfKey: number = 0;
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (alphabet.includes(char)){
+            if (indexOfKey>=key.length){
+                indexOfKey = 0
+            }
+            const keyNumber = alphabet.indexOf((key[indexOfKey]))
+            const charIndex = alphabet.indexOf(char)
+            const newIndex = (charIndex + keyNumber) % 26
+            result += alphabet[newIndex]
+            indexOfKey+=1
+        }
+        else result+=char
       }
-    const columns: { [key: string]: string[] } = {};
-    const key_int_list: number[] = [];
-    let x = 0;
-    let y = 0;
-    let output = '';
-
-    // Process key to determine column order
-    for (const char of key) {
-      const charCode = char.charCodeAt(0);
-      if (charCode >= 97 && charCode <= 122) {
-        key_int_list.push(charCode - 96);
-      } else if (charCode >= 65 && charCode <= 90) {
-        key_int_list.push(charCode - 64);
-      } else {
-        throw new Error('Key must be one word consisting only of letters.');
+      return result;
+}
+function vigenereDecript(key: string, text: string): string {
+    text = text.toUpperCase()
+    key = key.toUpperCase()
+    let result: string = ""
+    let indexOfKey: number = 0;
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (alphabet.includes(char)){
+            if (indexOfKey>=key.length){
+                indexOfKey = 0
+            }
+            const keyNumber = alphabet.indexOf((key[indexOfKey]))
+            const charIndex = alphabet.indexOf(char)
+            const newIndex = (charIndex - keyNumber + 26) % 26;
+            result += alphabet[newIndex]
+            indexOfKey+=1
+        }
+        else result+=char
       }
-    }
-
-    // Initialize columns based on key
-    for (const num of key_int_list) {
-      const columnName = num < 10 ? `column0${num}` : `column${num}`;
-      columns[columnName] = [];
-    }
-
-    // Assign plaintext characters to columns
-    for (const char of plaintext) {
-      x = key_int_list[y];
-      const columnName = x < 10 ? `column0${x}` : `column${x}`;
-      columns[columnName].push(char);
-      y = (y + 1) % key_int_list.length;
-    }
-
-    // Construct output by reading columns in sorted order
-    Object.keys(columns).sort().forEach(columnName => {
-      columns[columnName].forEach(char => {
-        output += char;
-      });
-    });
-
-    return output;
-  };
+      console.log('Decrypted:', result)
+      return result
+}

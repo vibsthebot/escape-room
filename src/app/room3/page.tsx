@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ConditionalButton from "../ui/conditionalButton";
 import ConditionalImage from "../ui/lock";
 import TypewriterEffect from "../ui/typewriter";
+import Image from 'next/image'
 
 export default function Page(){
     const [text, setText] = useState('');
@@ -18,26 +19,31 @@ export default function Page(){
     return (
         <main className="p-11 flex">
             <div className="basis-1/3">
+            <div className="relative">
+              <Image className= "w-full h-full object-cover" src = {"/slip-of-paper.png"} width={500} height={500} alt="Slip of paper"/>
+              <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-sm font-bold">124234111413114344<br /> <br />clé pour échapper au module</div>
+            </div>
             </div>
             <div className="basis-1/3">
                 <ul>
                     <li>
-                    <TypewriterEffect text={encryptColumnarTransposition("message", "key")}/>
+                    <TypewriterEffect text={encryptColumnarTransposition("You have almost escaped. The password for the secret door is: Escape", "hyperion")}/>
                     </li>
                     <li className="fixed w-1/3 bottom-5">
                         <div className="self-start flex flex-col items-center justify-center">
-                            <ConditionalImage showGreenImage={inputValueKey.toUpperCase()=="SUPERNOVA"}/>
+                            <ConditionalImage showGreenImage={inputValueKey.toUpperCase()=="ESCAPE"}/>
                             <div className="pt-5"></div>
                             <input
                                 id="Key"
                                 type="text"
+                                placeholder="Hint: The Cipher's code is the ship's destination"
                                 value = {inputValueKey}
                                 onChange = {(event) => setInputValueKey(event.target.value)}
                                 className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
                             />
                             <div className="pt-5"></div>
                             <div>
-                                <ConditionalButton showGreenImage={inputValueKey.toUpperCase()=="SUPERNOVA"} link={"/room3"}/>
+                                <ConditionalButton showGreenImage={inputValueKey.toUpperCase()=="ESCAPE"} link={"/room4"}/>
                             </div>
                         </div>
                     </li>
