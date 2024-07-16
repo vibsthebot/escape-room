@@ -29,13 +29,11 @@
        url('https://fonts.gstatic.com/s/wingdings/v12/JnnJQnSITGFkD-Q0qCgwwbl4.woff') format('woff');
 }
 
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 1s forwards;
+.visible {
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out; /* Adjust transition as needed */
 }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
+.hidden {
+  opacity: 0;
 }

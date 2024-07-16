@@ -37,7 +37,7 @@ export default function Page(){
                             />
                             <div className="pt-5"></div>
                             <div>
-                                <ConditionalButton showGreenImage={inputValueKey.toUpperCase()=="SUPERNOVA"} link={"/room5"}/>
+                                <ConditionalButton showGreenImage={inputValueKey.toUpperCase()=="SUPERNOVA"} link={"/room3"}/>
                             </div>
                         </div>
                     </li>
