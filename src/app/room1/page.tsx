@@ -5,6 +5,7 @@ import TypewriterEffect from "../ui/typewriter"
 import ConditionalImage from "../ui/lock"
 import ConditionalButton from "../ui/conditionalButton";
 import FadeIn from "../ui/fadeIn";
+import Timer from "../ui/timer";
 
 export default function Page(){
     const [text, setText] = useState('');
@@ -36,6 +37,7 @@ export default function Page(){
                                 <input
                                     id="Key"
                                     type="text"
+                                    placeholder="Substitution, no key"
                                     value = {inputValueKey}
                                     onChange = {(event) => setInputValueKey(event.target.value)}
                                     className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -49,7 +51,7 @@ export default function Page(){
                     </li>
                 </ul>
             </div>
-            <div className="basis-1/3"></div>
+            <div className="basis-1/3"><Timer/></div>
         </main>
     );
 }
@@ -64,17 +66,6 @@ function atbashEncrypt(text: string): string{
         if (alphabet.includes(text[i])){
             message.push(backAlphabet[alphabet.indexOf(text[i])])
             //console.log(message)
-        } else message.push(text[i])
-    }
-    return message.join("")
-}
-
-function atbashDecrypt(text:string): string{
-    text = text.toUpperCase()
-    const message = [];
-    for (let i = 0; i < text.length; i++){
-        if (alphabet.includes(text[i])){
-            message.push(alphabet[backAlphabet.indexOf(text[i])])
         } else message.push(text[i])
     }
     return message.join("")

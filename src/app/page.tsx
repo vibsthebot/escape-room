@@ -19,6 +19,7 @@ export default function Page() {
     // Handle form submission completion (optional)
     console.log('Form submitted!');
     //setFormData({ name: '' }); // Clear form after submission (optional)
+    window.location.href = '/intro';
 
   };
 
@@ -34,7 +35,7 @@ export default function Page() {
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           className="rounded-md border-15 p-2"
         />
-        <Link href={"/intro"}><button type="submit" className="px-5 py-2 bg-cyan-50 hover:bg-cyan-500 rounded-full">Submit</button></Link>
+       {/*<Link href={"/intro"}>*/}<button type="submit" className="px-5 py-2 bg-cyan-50 hover:bg-cyan-500 rounded-full">Submit</button>{/*</Link>*/}
       </form>
     </main>
   );

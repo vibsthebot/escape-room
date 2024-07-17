@@ -5,6 +5,8 @@ import ConditionalButton from "../ui/conditionalButton";
 import ConditionalImage from "../ui/lock";
 import TypewriterEffect from "../ui/typewriter";
 import Image from 'next/image'
+import FadeIn from "../ui/fadeIn";
+import Timer from "../ui/timer";
 
 export default function Page(){
     const [text, setText] = useState('');
@@ -27,75 +29,106 @@ export default function Page(){
             <div className="basis-1/3">
                 <ul>
                     <li>
-                    <TypewriterEffect text={encryptColumnarTransposition("You have almost escaped. The password for the secret door is: Escape", "hyperion")}/>
+                    <TypewriterEffect text={transpose("You have almost escaped. The password for the secret door is: Sputnik", 8, true)}/>
                     </li>
                     <li className="fixed w-1/3 bottom-5">
+                        <FadeIn waitBeforeFade={40000}>
                         <div className="self-start flex flex-col items-center justify-center">
-                            <ConditionalImage showGreenImage={inputValueKey.toUpperCase()=="ESCAPE"}/>
+                            <ConditionalImage showGreenImage={inputValueKey.toUpperCase()=="SPUTNIK"}/>
                             <div className="pt-5"></div>
                             <input
                                 id="Key"
                                 type="text"
-                                placeholder="Hint: The Cipher's code is the ship's destination"
+                                placeholder="Cipher Key = # letters in ship's destination"
                                 value = {inputValueKey}
                                 onChange = {(event) => setInputValueKey(event.target.value)}
                                 className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
                             />
                             <div className="pt-5"></div>
                             <div>
-                                <ConditionalButton showGreenImage={inputValueKey.toUpperCase()=="ESCAPE"} link={"/room4"}/>
+                                <ConditionalButton showGreenImage={inputValueKey.toUpperCase()=="SPUTNIK"} link={"/room4"}/>
                             </div>
                         </div>
+                        </FadeIn>
                     </li>
                 </ul>
             </div>
-            <div className="basis-1/3"></div>
+            <div className="basis-1/3">
+            <Timer/>
+            </div>
         </main>
     )
 }
 
-function encryptColumnarTransposition(plaintext: string, key: string): string {
-    if (!plaintext || !key) {
-        return "hi"
-      }
-    const columns: { [key: string]: string[] } = {};
-    const key_int_list: number[] = [];
-    let x = 0;
-    let y = 0;
-    let output = '';
+function transpose(message: string, key: number, isEncrypt: boolean): string {
+    const charArray: string[] = message.toUpperCase().split(" ").join("x").split("");
 
-    // Process key to determine column order
-    for (const char of key) {
-      const charCode = char.charCodeAt(0);
-      if (charCode >= 97 && charCode <= 122) {
-        key_int_list.push(charCode - 96);
-      } else if (charCode >= 65 && charCode <= 90) {
-        key_int_list.push(charCode - 64);
-      } else {
-        throw new Error('Key must be one word consisting only of letters.');
-      }
+    if (isEncrypt) {
+        // Calculate number of columns
+        const charArray: string[] = message.toUpperCase().split(" ").join("x").split("")
+        const numOfCol = Math.ceil(charArray.length / key);  // Number of columns in the grid
+        const numOfRows = key;
+        const firstMatrix: string[][] = [];
+        for (let i = 0; i < numOfCol; i++) {
+            firstMatrix[i] = new Array(numOfRows).fill("x");  // Fill with empty strings
+        }
+
+        let index = 0;
+        // Fill the matrix by rows
+        for (let i = 0; i < numOfCol; i++) {
+            for (let j = 0; j < numOfRows; j++) {
+                if (index < charArray.length) {
+                    firstMatrix[i][j] = charArray[index];
+                    index++;
+                }
+            }
+        }
+
+        // Create the transposed matrix (to get the ciphertext)
+        const finalArray: string[] = [];
+        for (let i = 0; i < numOfRows; i++) {
+            for (let j = 0; j < numOfCol; j++) {
+                finalArray.push(firstMatrix[j][i]);  // Read the columns of the firstMatrix to make the finalArray
+            }
+        }
+        return finalArray.join("");
+
+
+    } else {
+        // Calculate number of columns
+        const numOfCol = Math.ceil(message.length / key);
+
+        // Create first matrix (partially encrypted message)
+        const firstMatrix: string[][] = [];
+        for (let i = 0; i < key; i++) {
+            firstMatrix[i] = new Array(numOfCol).fill("");
+        }
+
+        let index = 0;
+        // Fill first matrix by columns
+        for (let i = 0; i < key; i++) {
+            for (let j = 0; j < numOfCol; j++) {
+                if (index < message.length) {
+                    firstMatrix[i][j] = message[index];
+                    index++;
+                }
+            }
+        }
+
+        // Create transposed matrix (fully decrypted message)
+        const finalMatrix: string[][] = [];
+        for (let i = 0; i < numOfCol; i++) {
+            finalMatrix[i] = new Array(key).fill("");
+        }
+
+        const finalArray: string[] = [];
+        // Fill transposed matrix and final array by swapping rows and columns
+        for (let i = 0; i < numOfCol; i++) {
+            for (let j = 0; j < key; j++) {
+                finalMatrix[i][j] = firstMatrix[j][i];
+                finalArray.push(firstMatrix[j][i]);
+            }
+        }
+        return finalArray.join("");
     }
-
-    // Initialize columns based on key
-    for (const num of key_int_list) {
-      const columnName = num < 10 ? `column0${num}` : `column${num}`;
-      columns[columnName] = [];
-    }
-
-    // Assign plaintext characters to columns
-    for (const char of plaintext) {
-      x = key_int_list[y];
-      const columnName = x < 10 ? `column0${x}` : `column${x}`;
-      columns[columnName].push(char);
-      y = (y + 1) % key_int_list.length;
-    }
-
-    // Construct output by reading columns in sorted order
-    Object.keys(columns).sort().forEach(columnName => {
-      columns[columnName].forEach(char => {
-        output += char;
-      });
-    });
-
-    return output;
-  };
+}
