@@ -8,7 +8,9 @@ import Timer from "../ui/timer";
 export default function Page(){
     const now = new Date();
     const targetDate = new Date(now.getTime() + (1 * 60 * 60 * 1000));
-    localStorage.setItem('finalTime', targetDate.toString());
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('finalTime', targetDate.toString());
+    }
 
     return (
         <main className="flex">

@@ -11,11 +11,13 @@ export default function Page(){
     const [text, setText] = useState('');
     const [inputValueKey, setInputValueKey] = useState<string>('');
     useEffect(() => {
-        const localStorageText = window.localStorage.getItem('name');
-        if (localStorageText) {
-        setText(localStorageText);
+        if (typeof window !== 'undefined') {
+            const localStorageText = window.localStorage.getItem('name');
+            if (localStorageText) {
+                setText(localStorageText);
+            }
+            console.log()
         }
-        console.log()
     }, []);
 
     return (

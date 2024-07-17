@@ -12,11 +12,13 @@ export default function Page(){
     const [text, setText] = useState('');
     const [inputValueKey, setInputValueKey] = useState<string>('');
     useEffect(() => {
-        const localStorageText = window.localStorage.getItem('name');
-        if (localStorageText) {
-            setText(localStorageText);
+        if (typeof window !== 'undefined') {
+            const localStorageText = window.localStorage.getItem('name');
+            if (localStorageText) {
+                setText(localStorageText);
+            }
+            console.log()
         }
-        console.log()
     }, []);
 
     const [submitted, setSubmitted] = useState(false)
@@ -25,7 +27,10 @@ export default function Page(){
         if (submitted) setSubmitted(false)
         else setSubmitted(true)
     }
-    let localStorageText = window.localStorage.getItem('name');
+    let localStorageText
+    if (typeof window !== 'undefined') {
+        localStorageText = window.localStorage.getItem('name');
+    }
     if (localStorageText == null) localStorageText = ""
     return (
         <main className="p-11 flex">
